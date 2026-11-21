@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kryptosystem - Projekt 1</title>
+  <style>
+    :root {
+      --bg: #f4f6f8;
+      --card-bg: #ffffff;
+      --border: #d0d7de;
+      --text: #24292f;
+      --text-muted: #57606a;
+      --primary: #0969da;
+      --primary-hover: #0852ab;
+      --error-bg: #ffebe9;
+      --error-border: #ff8182;
+      --error-text: #cf222e;
+      --success-bg: #dafbe1;
+      --success-border: #4ac26b;
+      --success-text: #1a7f37;
+      --info-bg: #ddf4ff;
+      --info-border: #54aeff;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      --font-mono: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: var(--font);
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      padding: 30px 16px;
+      display: flex;
+      justify-content: center;
+      line-height: 1.5;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 820px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    header {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px 24px;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px 24px;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 14px;
+      color: var(--text);
+    }
+
+    .calc-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .calc-row input {
+      flex: 1;
+      min-width: 240px;
+    }
+
+    /* Menu zakładek */
+    .tabs-nav {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 18px;
+      gap: 4px;
+    }
+
+    .tab-btn {
+      padding: 8px 16px;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      transition: all 0.15s ease;
+    }
+
+    .tab-btn:hover {
+      color: var(--text);
+      background: #f6f8fa;
+    }
+
+    .tab-btn.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+      font-weight: 600;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .hint {
+      font-weight: normal;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.95rem;
+      background: #fff;
+      color: var(--text);
+    }
+
+    input[type="text"]:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.15);
+    }
+
+    textarea {
+      min-height: 90px;
+      resize: vertical;
+      font-family: var(--font-mono);
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: background 0.15s ease;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-secondary {
+      background: #f6f8fa;
+      color: var(--text);
+      border-color: var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: #eaeef2;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .info-box {
+      background: var(--info-bg);
+      border: 1px solid var(--info-border);
+      color: #0969da;
+      padding: 10px 14px;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      margin-bottom: 16px;
+    }
+
+    .error-box {
+      background: var(--error-bg);
+      border: 1px solid var(--error-border);
+      color: var(--error-text);
+      padding: 12px 14px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .result-section {
+      margin-top: 20px;
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+      display: none;
+    }
+
+    .result-box {
+      background: #f6f8fa;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px;
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      color: #1f2328;
+      min-height: 50px;
+      white-space: pre-wrap;
+      word-break: break-all;
+      margin-top: 6px;
+    }
+
+    .result-details {
+      margin-top: 8px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Nagłówek -->
+    <header>
+      <h1>Kryptosystem: Szyfrowanie i Deszyfrowanie</h1>
+      <p>Aplikacja obsługuje szyfr podstawieniowy, Vigenère'a oraz permutacyjny.</p>
+    </header>
+
+    <!-- Kalkulator przydziału wg indeksu -->
+    <div class="card">
+      <div class="card-title">Kalkulator wyboru szyfru (indeks modulo 3)</div>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 10px;">
+        Wpisz numer indeksu (lub numery grupy), aby wyliczyć przypisany szyfr:
+      </p>
+      <div class="calc-row">
+        <input type="text" id="indexInput" placeholder="np. 12345 lub 12345, 67890">
+        <button class="btn btn-secondary" onclick="calculateIndex()">Sprawdź i ustaw szyfr</button>
+      </div>
+      <div id="calcOutput" class="info-box" style="display: none; margin-top: 12px; margin-bottom: 0;"></div>
+    </div>
+
+    <!-- Główny formularz kryptosystemu -->
+    <div class="card">
+      <div class="card-title">Wybór szyfru</div>
+
+      <!-- Zakładki wyboru szyfru -->
+      <div class="tabs-nav">
+        <button class="tab-btn active" id="tab-substitution" onclick="setCipher('substitution')">
+          Szyfr podstawieniowy
+        </button>
+        <button class="tab-btn" id="tab-vigenere" onclick="setCipher('vigenere')">
+          Szyfr Vigenère'a
+        </button>
+        <button class="tab-btn" id="tab-permutation" onclick="setCipher('permutation')">
+          Szyfr permutacyjny
+        </button>
+      </div>
+
+      <!-- Informacja o wybranym szyfrze -->
+      <div id="cipherInfo" class="info-box">
+        <!-- Generowane dynamicznie -->
+      </div>
+
+      <!-- Wybór operacji -->
+      <div class="radio-group">
+        <label class="radio-option">
+          <input type="radio" name="operation" id="op-encrypt" value="encrypt" checked onchange="updateLabels()">
+          <span>Szyfrowanie</span>
+        </label>
+        <label class="radio-option">
+          <input type="radio" name="operation" id="op-decrypt" value="decrypt" onchange="updateLabels()">
+          <span>Deszyfrowanie</span>
+        </label>
+      </div>
+
+      <!-- Pole klucza -->
+      <div class="form-group" id="keyGroup">
+        <label for="keyInput">
+          <span id="keyLabel">Klucz:</span>
+          <span class="hint" id="keyHint">Liczba całkowita</span>
+        </label>
+        <input type="text" id="keyInput" autocomplete="off" placeholder="Podaj klucz...">
+      </div>
+
+      <!-- Pole tekstu -->
+      <div class="form-group">
+        <label for="textInput">
+          <span id="textLabel">Tekst wejściowy:</span>
+          <span class="hint">Litery alfabetu A-Z / a-z</span>
+        </label>
+        <textarea id="textInput" placeholder="Wpisz tekst..."></textarea>
+      </div>
+
+      <!-- Komunikat błędu -->
+      <div id="errorAlert" class="error-box"></div>
+
+      <!-- Przyciski akcji -->
+      <div class="actions">
+        <button class="btn btn-primary" id="submitBtn" onclick="runCrypto()">Wykonaj</button>
+        <button class="btn btn-secondary" onclick="fillSample()">Wstaw przykład</button>
+        <button class="btn btn-secondary" onclick="resetForm()">Wyczyść</button>
+      </div>
+
+      <!-- Wynik -->
+      <div id="resultSection" class="result-section">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <strong id="resultHeader" style="font-size: 0.95rem;">Wynik:</strong>
+          <button class="btn btn-secondary" style="padding: 4px 10px; font-size: 0.8rem;" onclick="copyText()">Kopiuj</button>
+        </div>
+        <div id="resultBox" class="result-box"></div>
+        <div id="resultDetails" class="result-details"></div>
+      </div>
+    </div>
+
+    <div class="footer">
+      Projekt 1: Kryptografia
+    </div>
+  </div>
+
+  <script>
+    // Stała permutacja o długości 6
+    // [3, 0, 5, 1, 4, 2] w indeksowaniu 0-based odpowiada [4, 1, 6, 2, 5, 3] w 1-based
+    const HARDCODED_PERMUTATION = [3, 0, 5, 1, 4, 2];
+    const PERM_LEN = HARDCODED_PERMUTATION.length;
+
+    // Permutacja odwrotna do operacji deszyfrowania
+    const INVERSE_PERMUTATION = new Array(PERM_LEN);
+    for (let i = 0; i < PERM_LEN; i++) {
+      INVERSE_PERMUTATION[HARDCODED_PERMUTATION[i]] = i;
+    }
+
+    let currentCipher = 'substitution';
+
+    const CIPHER_CONFIG = {
+      substitution: {
+        info: 'Szyfr podstawieniowy (Cezara): przesunięcie liter o liczbę całkowitą <em>k</em> (suma indeksów % 3 == 0).',
+        keyLabel: 'Klucz (liczba całkowita k):',
+        keyHint: 'Dowolna liczba całkowita (np. 3, 13, -5)',
+        keyPlaceholder: 'Wpisz liczbę całkowitą...',
+        readOnlyKey: false,
+        defaultValue: ''
+      },
+      vigenere: {
+        info: 'Szyfr Vigenère\'a: szyfrowanie polialfabetyczne kluczem tekstowym o długości minimum 8 liter (suma indeksów % 3 == 1).',
+        keyLabel: 'Słowo kluczowe:',
+        keyHint: 'Wymagane minimum 8 liter (bez cyfr i spacji)',
+        keyPlaceholder: 'np. KRYPTOGRAFIA',
+        readOnlyKey: false,
+        defaultValue: ''
+      },
+      permutation: {
+        info: 'Szyfr permutacyjny: stała permutacja blokowa [4, 1, 6, 2, 5, 3] o długości 6 (suma indeksów % 3 == 2).',
+        keyLabel: 'Permutacja:',
+        keyHint: 'Zdefiniowana na stałe w kodzie',
+        keyPlaceholder: '[4, 1, 6, 2, 5, 3] (długość 6)',
+        readOnlyKey: true,
+        defaultValue: '[4, 1, 6, 2, 5, 3]'
+      }
+    };
+
+    // Zamiana polskich liter na ich odpowiedniki bez znaków diakrytycznych
+    function cleanPolish(str) {
+      const map = {
+        'ą': 'a', 'ć': 'c', 'ę': 'e', 'ł': 'l', 'ń': 'n', 'ó': 'o', 'ś': 's', 'ź': 'z', 'ż': 'z',
+        'Ą': 'A', 'Ć': 'C', 'Ę': 'E', 'Ł': 'L', 'Ń': 'N', 'Ó': 'O', 'Ś': 'S', 'Ź': 'Z', 'Ż': 'Z'
+      };
+      return str.replace(/[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/g, m => map[m] || m);
+    }
+
+    function updateLabels() {
+      const isEncrypt = document.getElementById('op-encrypt').checked;
+      document.getElementById('textLabel').textContent = isEncrypt ? 'Tekst jawny:' : 'Szyfrogram:';
+      document.getElementById('submitBtn').textContent = isEncrypt ? 'Zaszyfruj' : 'Odszyfruj';
+      document.getElementById('resultHeader').textContent = isEncrypt ? 'Zaszyfrowany tekst:' : 'Odszyfrowany tekst:';
+      hideError();
+    }
+
+    function setCipher(name) {
+      currentCipher = name;
+      ['substitution', 'vigenere', 'permutation'].forEach(c => {
+        const tab = document.getElementById(`tab-${c}`);
+        if (c === name) {
+          tab.classList.add('active');
+        } else {
+          tab.classList.remove('active');
+        }
+      });
+
+      const cfg = CIPHER_CONFIG[name];
+      document.getElementById('cipherInfo').innerHTML = cfg.info;
+      document.getElementById('keyLabel').textContent = cfg.keyLabel;
+      document.getElementById('keyHint').textContent = cfg.keyHint;
+      
+      const keyField = document.getElementById('keyInput');
+      keyField.placeholder = cfg.keyPlaceholder;
+      keyField.readOnly = cfg.readOnlyKey;
+      keyField.value = cfg.defaultValue;
+
+      updateLabels();
+    }
+
+    function showError(msg) {
+      const box = document.getElementById('errorAlert');
+      box.textContent = msg;
+      box.style.display = 'block';
+    }
+
+    function hideError() {
+      document.getElementById('errorAlert').style.display = 'none';
+    }
+
+    // Walidacja tekstu wejściowego
+    function validateInputText(rawText) {
+      if (!rawText || !rawText.trim()) {
+        return { valid: false, error: 'Pole tekstowe nie może być puste.' };
+      }
+      const norm = cleanPolish(rawText);
+      if (!/[a-zA-Z]/.test(norm)) {
+        return { valid: false, error: 'Wprowadzony tekst musi zawierać przynajmniej jedną literę alfabetu.' };
+      }
+      return { valid: true, text: norm };
+    }
+
+    // Walidacja klucza podstawieniowego
+    function validateSubKey(rawKey) {
+      if (!rawKey || !rawKey.trim()) {
+        return { valid: false, error: 'Podaj liczbę całkowitą jako klucz.' };
+      }
+      const trimmed = rawKey.trim();
+      if (!/^-?\d+$/.test(trimmed)) {
+        return { valid: false, error: 'Klucz musi być poprawną liczbą całkowitą (np. 3, -5).' };
+      }
+      return { valid: true, value: parseInt(trimmed, 10) };
+    }
+
+    // Walidacja klucza Vigenere'a
+    function validateVigKey(rawKey) {
+      if (!rawKey || !rawKey.trim()) {
+        return { valid: false, error: 'Podaj słowo kluczowe o długości minimum 8 liter.' };
+      }
+      const norm = cleanPolish(rawKey.trim());
+      if (!/^[a-zA-Z]+$/.test(norm)) {
+        return { valid: false, error: 'Klucz może zawierać tylko litery alfabetu (bez cyfr i spacji).' };
+      }
+      if (norm.length < 8) {
+        return { valid: false, error: `Klucz jest za krótki. Wymagane min. 8 liter, podano ${norm.length}.` };
+      }
+      return { valid: true, value: norm.toUpperCase() };
+    }
+
+    // Algorytm szyfru podstawieniowego
+    function subCrypto(text, key, isEncrypt) {
+      let shift = key % 26;
+      if (!isEncrypt) shift = -shift;
+      shift = (shift % 26 + 26) % 26;
+
+      let out = '';
+      for (let i = 0; i < text.length; i++) {
+        const c = text.charCodeAt(i);
+        if (c >= 65 && c <= 90) {
+          out += String.fromCharCode(((c - 65 + shift) % 26) + 65);
+        } else if (c >= 97 && c <= 122) {
+          out += String.fromCharCode(((c - 97 + shift) % 26) + 97);
+        } else {
+          out += text[i];
+        }
+      }
+      return out;
+    }
+
+    // Algorytm szyfru Vigenere'a
+    function vigCrypto(text, key, isEncrypt) {
+      let out = '';
+      let kIdx = 0;
+      for (let i = 0; i < text.length; i++) {
+        const c = text.charCodeAt(i);
+        let base = 0;
+        if (c >= 65 && c <= 90) base = 65;
+        else if (c >= 97 && c <= 122) base = 97;
+
+        if (base !== 0) {
+          const shift = key.charCodeAt(kIdx % key.length) - 65;
+          let offset;
+          if (isEncrypt) {
+            offset = (c - base + shift) % 26;
+          } else {
+            offset = (c - base - shift + 26) % 26;
+          }
+          out += String.fromCharCode(base + offset);
+          kIdx++;
+        } else {
+          out += text[i];
+        }
+      }
+      return out;
+    }
+
+    // Algorytm szyfru permutacyjnego
+    function permCrypto(text, isEncrypt) {
+      const perm = isEncrypt ? HARDCODED_PERMUTATION : INVERSE_PERMUTATION;
+      let data = text;
+      const rem = data.length % PERM_LEN;
+      let pad = 0;
+
+      if (rem !== 0) {
+        pad = PERM_LEN - rem;
+        data += '_'.repeat(pad);
+      }
+
+      let out = '';
+      const blocks = data.length / PERM_LEN;
+      for (let b = 0; b < blocks; b++) {
+        const block = data.substring(b * PERM_LEN, (b + 1) * PERM_LEN);
+        const res = new Array(PERM_LEN);
+        for (let i = 0; i < PERM_LEN; i++) {
+          res[perm[i]] = block[i];
+        }
+        out += res.join('');
+      }
+
+      if (!isEncrypt) {
+        out = out.replace(/_+$/, '');
+      }
+      return { output: out, padding: pad };
+    }
+
+    // Główna funkcja wykonująca operację
+    function runCrypto() {
+      hideError();
+      document.getElementById('resultSection').style.display = 'none';
+
+      const isEncrypt = document.getElementById('op-encrypt').checked;
+      const rawText = document.getElementById('textInput').value;
+
+      const textCheck = validateInputText(rawText);
+      if (!textCheck.valid) {
+        showError(textCheck.error);
+        return;
+      }
+      const text = textCheck.text;
+
+      let result = '';
+      let details = '';
+
+      if (currentCipher === 'substitution') {
+        const keyCheck = validateSubKey(document.getElementById('keyInput').value);
+        if (!keyCheck.valid) {
+          showError(keyCheck.error);
+          return;
+        }
+        result = subCrypto(text, keyCheck.value, isEncrypt);
+        details = `Klucz przesunięcia k = ${keyCheck.value}`;
+
+      } else if (currentCipher === 'vigenere') {
+        const keyCheck = validateVigKey(document.getElementById('keyInput').value);
+        if (!keyCheck.valid) {
+          showError(keyCheck.error);
+          return;
+        }
+        result = vigCrypto(text, keyCheck.value, isEncrypt);
+        details = `Słowo kluczowe: "${keyCheck.value}" (długość: ${keyCheck.value.length})`;
+
+      } else if (currentCipher === 'permutation') {
+        const res = permCrypto(text, isEncrypt);
+        result = res.output;
+        details = isEncrypt
+          ? `Permutacja [4, 1, 6, 2, 5, 3]. Dopełnienie (padding): ${res.padding} zn.`
+          : 'Odszyfrowano permutacją odwrotną.';
+      }
+
+      document.getElementById('resultBox').textContent = result;
+      document.getElementById('resultDetails').textContent = details;
+      document.getElementById('resultSection').style.display = 'block';
+    }
+
+    // Kalkulator indeksu
+    function calculateIndex() {
+      const raw = document.getElementById('indexInput').value.trim();
+      const out = document.getElementById('calcOutput');
+
+      if (!raw) {
+        out.style.display = 'block';
+        out.style.background = 'var(--error-bg)';
+        out.style.borderColor = 'var(--error-border)';
+        out.style.color = 'var(--error-text)';
+        out.textContent = 'Wpisz co najmniej jeden numer indeksu.';
+        return;
+      }
+
+      const nums = raw.match(/\d+/g);
+      if (!nums || nums.length === 0) {
+        out.style.display = 'block';
+        out.style.background = 'var(--error-bg)';
+        out.style.borderColor = 'var(--error-border)';
+        out.style.color = 'var(--error-text)';
+        out.textContent = 'Nie znaleziono liczb w podanym tekście.';
+        return;
+      }
+
+      let sum = 0;
+      nums.forEach(n => sum += parseInt(n, 10));
+      const mod = sum % 3;
+
+      out.style.display = 'block';
+      out.style.background = 'var(--info-bg)';
+      out.style.borderColor = 'var(--info-border)';
+      out.style.color = '#0969da';
+
+      let assigned = '';
+      if (mod === 0) {
+        assigned = 'Szyfr podstawieniowy';
+        setCipher('substitution');
+      } else if (mod === 1) {
+        assigned = 'Szyfr Vigenère\'a';
+        setCipher('vigenere');
+      } else {
+        assigned = 'Szyfr permutacyjny';
+        setCipher('permutation');
+      }
+
+      out.innerHTML = `Suma indeksów: <strong>${sum}</strong> &rarr; ${sum} % 3 = <strong>${mod}</strong>. Przypisany szyfr: <strong>${assigned}</strong> (ustawiono w menu).`;
+    }
+
+    function fillSample() {
+      hideError();
+      if (currentCipher === 'substitution') {
+        document.getElementById('keyInput').value = '3';
+        document.getElementById('textInput').value = 'KRYPTOGRAFIA MERITO';
+      } else if (currentCipher === 'vigenere') {
+        document.getElementById('keyInput').value = 'BEZPIECZENSTWO';
+        document.getElementById('textInput').value = 'TAJNY KOMUNIKAT';
+      } else if (currentCipher === 'permutation') {
+        document.getElementById('textInput').value = 'ALICJA MA KOTA';
+      }
+    }
+
+    function resetForm() {
+      document.getElementById('textInput').value = '';
+      if (currentCipher !== 'permutation') {
+        document.getElementById('keyInput').value = '';
+      }
+      document.getElementById('resultSection').style.display = 'none';
+      hideError();
+    }
+
+    function copyText() {
+      const text = document.getElementById('resultBox').textContent;
+      if (text) {
+        navigator.clipboard.writeText(text).then(() => {
+          alert('Skopiowano do schowka.');
+        });
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      setCipher('substitution');
+    });
+  </script>
+</body>
+</html>
